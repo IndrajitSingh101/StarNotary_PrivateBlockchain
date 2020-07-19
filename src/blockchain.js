@@ -120,8 +120,7 @@ class Blockchain {
             // reject on error
             if ((currentTime - requestTime) >= (5 * 60)) reject(new Error('Request timed out.'));
             if(!bitcoinMessage.verify(message,address,signature)) reject(new Error('Invalid message'))
-            let block=new BlockClass.Block({star});
-            block.owner=address;
+            let block=new BlockClass.Block({"owner":address,star});
             block=await self._addBlock(block)
             resolve(block)
         });
@@ -167,10 +166,12 @@ class Blockchain {
         let self = this;
         let stars = [];
         return new Promise((resolve, reject) => {
-            let ownedStars=self.chain.filter(block=>block.owner===address)
-            if(ownedStars.length===0) reject(new Error('Address not found.'));
-            stars=ownedStars.map(block=>JSON.parse(hex2ascii(block.body)))
-            stars?resolve(stars): reject(new Error('Failed to return stars'));
+            let ownedStars=self.chain.map(block=>JSON.parse(hex2ascii(block.body))).filter(star=>star.owner===address)
+            if(ownedStars.length===0) {
+                reject(new Error('No stars found.'));
+            }else{
+                resolve(ownedStars);
+            }
         });
     }
 
