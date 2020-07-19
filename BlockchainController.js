@@ -19,7 +19,7 @@ class BlockchainController {
         this.getStarsByOwner();
     }
 
-    // Enpoint to Get a Block by Height (GET Endpoint)
+    // Enpoint to Get a Block by Height (GET Endpoint) passing height value as query parameter for request
     getBlockByHeight() {
         this.app.get("/block/:height", async (req, res) => {
             if(req.params.height) {
@@ -78,9 +78,9 @@ class BlockchainController {
         });
     }
 
-    // This endpoint allows you to retrieve the block by hash (GET endpoint)
+    // This endpoint allows you to retrieve the block by hash (GET endpoint) passing has value as request query
     getBlockByHash() {
-        this.app.get("/block/:hash", async (req, res) => {
+        this.app.get("/block/hash/:hash", async (req, res) => {
             if(req.params.hash) {
                 const hash = req.params.hash;
                 let block = await this.blockchain.getBlockByHash(hash);
